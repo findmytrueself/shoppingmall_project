@@ -1,3 +1,22 @@
-const ProductDetail = () => <div>메인페이지</div>;
+import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+import { fetcher, QueryKeys } from "../../queryClient";
+import { Product } from "../../types";
+import ProductDetail from "../../components/detail";
+const ProductDetailPage = () => {
+  const { id } = useParams();
+  const { data } = useQuery<Product>([QueryKeys.PRODUCTS, id], () =>
+    fetcher({ method: "GET", path: `/products/${id}` })
+  );
+  console.log(data);
+  if (!data) return null;
 
-export default ProductDetail;
+  return (
+    <>
+      <h2>상품상세</h2>
+      <ProductDetail item={data} />
+    </>
+  );
+};
+
+export default ProductDetailPage;
